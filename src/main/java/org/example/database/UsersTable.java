@@ -1,45 +1,52 @@
 package org.example.database;
 
-import org.example.service.DataLocalSQL;
-import org.example.models.User;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.example.service.DatabaseConnection;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.example.models.User;
+import org.example.service.DataLocalSQL;
+import org.example.service.DatabaseConnection;
 
-public class UserDatabase extends DataLocalSQL<User> {
-  private static final String CREATE_TABLE_SQL = """
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL,
-            email TEXT NOT NULL,
-            password TEXT NOT NULL,
-            avatarUrl TEXT DEFAULT '/Images/default_avatar.png',
-            lastActive TEXT
-        );
-    """;
+public class UsersTable extends DataLocalSQL<User> {
+
+  private static final String CREATE_USERS_TABLE = """
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL UNIQUE,
+        email TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL,
+        last_active TEXT,
+        avatar_url TEXT DEFAULT '/Images/default_avatar.png'
+    );
+""";
+
+  private static final String CREATE_INDEXES = """
+    CREATE INDEX IF NOT EXISTS idx_username ON users(username);
+    CREATE INDEX IF NOT EXISTS idx_email ON users(email);
+""";
+
+  public UsersTable() {
+    createTable(CREATE_USERS_TABLE);
+    createTable(CREATE_INDEXES);
+  }
 
   private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-  public UserDatabase() {
-    createTable(CREATE_TABLE_SQL);
-  }
-
   @Override
   public void create(User user) {
-    String insertSQL = "INSERT INTO users (username, email, password, avatarUrl, lastActive) VALUES (?, ?, ?, ?, ?)";
+    String insertSQL = "INSERT INTO users (username, email, password, avatarUrl) VALUES (?, ?, ?, ?)";
     try (Connection connection = DatabaseConnection.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(insertSQL)) {
-
+      if (connection == null) {
+        throw new IllegalStateException("Database connection is not available.");
+      }
       statement.setString(1, user.getUsername());
       statement.setString(2, user.getEmail());
       statement.setString(3, user.getPassword());
       statement.setString(4, user.getAvatarUrl());
-      statement.setString(5, user.getLastActive() != null ? user.getLastActive().format(FORMATTER) : null);
       statement.executeUpdate();
 
       System.out.println("User added successfully.");
@@ -53,7 +60,9 @@ public class UserDatabase extends DataLocalSQL<User> {
     String selectSQL = "SELECT * FROM users WHERE id = ?";
     try (Connection connection = DatabaseConnection.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(selectSQL)) {
-
+      if (connection == null) {
+        throw new IllegalStateException("Database connection is not available.");
+      }
       statement.setInt(1, id);
       try (ResultSet resultSet = statement.executeQuery()) {
         if (resultSet.next()) {
@@ -71,12 +80,13 @@ public class UserDatabase extends DataLocalSQL<User> {
     String updateSQL = "UPDATE users SET username = ?, email = ?, password = ?, avatarUrl = ?, lastActive = ? WHERE id = ?";
     try (Connection connection = DatabaseConnection.getInstance().getConnection();
         PreparedStatement statement = connection.prepareStatement(updateSQL)) {
-
+      if (connection == null) {
+        throw new IllegalStateException("Database connection is not available.");
+      }
       statement.setString(1, user.getUsername());
       statement.setString(2, user.getEmail());
       statement.setString(3, user.getPassword());
       statement.setString(4, user.getAvatarUrl());
-      statement.setString(5, user.getLastActive() != null ? user.getLastActive().format(FORMATTER) : null);
       statement.setInt(6, user.getId());
       int rowsAffected = statement.executeUpdate();
 
@@ -106,4 +116,3 @@ public class UserDatabase extends DataLocalSQL<User> {
     return user;
   }
 }
-

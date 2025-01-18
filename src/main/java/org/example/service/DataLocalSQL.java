@@ -4,11 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DataLocalSQL<T> {
-
+  /*
   // Метод для створення таблиці (використовується SQL-скрипт)
   public void createTable(String createTableSQL) {
     try (Connection connection = DatabaseConnection.getInstance().getConnection();
@@ -19,6 +20,17 @@ public abstract class DataLocalSQL<T> {
       System.out.println("Error creating table: " + e.getMessage());
     }
   }
+  */
+  protected void createTable(String createTableSQL) {
+    Connection connection = DatabaseConnection.getInstance().getConnection();
+    try (Statement statement = connection.createStatement()) {
+      statement.execute(createTableSQL);
+      System.out.println("Table or index created successfully.");
+    } catch (SQLException e) {
+      System.out.println("Error creating table or index: " + e.getMessage());
+    }
+  }
+
 
   // Абстрактний метод для створення запису
   public abstract void create(T entity);

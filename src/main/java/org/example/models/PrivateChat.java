@@ -19,16 +19,21 @@ public class PrivateChat {
   private Map<User, Integer> unreadMessagesCount;
   private Map<User, String> displayNameCache = new HashMap<>();
 
-  public PrivateChat(int id, User user1, User user2) {
+  public PrivateChat(int id, User user1, User user2, LocalDateTime createdAt) {
     this.id = id;
     this.user1 = user1;
     this.user2 = user2;
     this.historyChat = new HistoryChat();
-    this.createdAt = LocalDateTime.now();
+    this.createdAt = createdAt;
     this.notificationService = new NotificationService();
     this.unreadMessagesCount = new HashMap<>();
     this.unreadMessagesCount.put(user1, 0);
     this.unreadMessagesCount.put(user2, 0);
+  }
+
+  public PrivateChat(int id, LocalDateTime createdAt) {
+    this.id = id;
+    this.createdAt = createdAt;
   }
 
   public void updateUnreadMessagesCount(User sender) {
@@ -118,7 +123,6 @@ public class PrivateChat {
     }
   }
 
-
   public int getUnreadMessagesCount(User user) {
     return unreadMessagesCount.getOrDefault(user, 0);
   }
@@ -127,11 +131,77 @@ public class PrivateChat {
     unreadMessagesCount.put(user, 0);
   }
 
-  public int getId() {
-    return id;
+  public User getUser1() {
+    return user1;
+  }
+
+  public void setUser1(User user1) {
+    this.user1 = user1;
+  }
+
+  public User getUser2() {
+    return user2;
+  }
+
+  public void setUser2(User user2) {
+    this.user2 = user2;
+  }
+
+  public String getChatImageUrl() {
+    return chatImageUrl;
+  }
+
+  public void setChatImageUrl(String chatImageUrl) {
+    this.chatImageUrl = chatImageUrl;
+  }
+
+  public NotificationService getNotificationService() {
+    return notificationService;
+  }
+
+  public Map<User, Integer> getUnreadMessagesCount() {
+    return unreadMessagesCount;
+  }
+
+  public Map<User, String> getDisplayNameCache() {
+    return displayNameCache;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
   }
 
   public HistoryChat getHistoryChat() {
     return historyChat;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public void setHistoryChat(HistoryChat historyChat) {
+    this.historyChat = historyChat;
+  }
+
+  public void setNotificationService(NotificationService notificationService) {
+    this.notificationService = notificationService;
+  }
+
+  public void setUnreadMessagesCount(
+      Map<User, Integer> unreadMessagesCount) {
+    this.unreadMessagesCount = unreadMessagesCount;
+  }
+
+  public void setDisplayNameCache(
+      Map<User, String> displayNameCache) {
+    this.displayNameCache = displayNameCache;
   }
 }

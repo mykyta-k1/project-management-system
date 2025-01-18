@@ -21,7 +21,8 @@ public class Message {
   private LocalDateTime sentAt;
 
   public Message(int id, PrivateChat privateChat, User user, List<MessageType> messageTypes,
-      String textContent, String imageUrl, String videoUrl, String documentUrl) {
+      String textContent, String imageUrl, String videoUrl, String documentUrl,
+      boolean isRead, LocalDateTime sentAt) {
     this.id = id;
     this.privateChat = privateChat;
     this.user = user;
@@ -30,8 +31,8 @@ public class Message {
     this.imageUrl = imageUrl;
     this.videoUrl = videoUrl;
     this.documentUrl = documentUrl;
-    this.isRead = false;
-    this.sentAt = LocalDateTime.now();
+    this.isRead = isRead;
+    this.sentAt = sentAt;
   }
 
   public int getId() {
@@ -84,6 +85,38 @@ public class Message {
 
   public void setPrivateChat(PrivateChat privateChat) {
     this.privateChat = privateChat;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public void setMessageTypes(List<MessageType> messageTypes) {
+    this.messageTypes = messageTypes;
+  }
+
+  public void setTextContent(String textContent) {
+    this.textContent = textContent;
+  }
+
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
+  }
+
+  public void setVideoUrl(String videoUrl) {
+    this.videoUrl = videoUrl;
+  }
+
+  public void setDocumentUrl(String documentUrl) {
+    this.documentUrl = documentUrl;
+  }
+
+  public void setSentAt(LocalDateTime sentAt) {
+    this.sentAt = sentAt;
   }
 
   @Override

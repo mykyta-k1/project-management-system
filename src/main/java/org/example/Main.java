@@ -1,24 +1,30 @@
 package org.example;
 
-import java.util.List;
+import org.example.database.*;
 import org.example.enums.MessageType;
-import org.example.models.Chat;
-import org.example.models.Message;
-import org.example.models.PrivateChat;
-import org.example.models.User;
+import org.example.models.*;
+import org.example.service.DatabaseConnection;
+import org.example.service.NotificationService;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
   public static void main(String[] args) {
-    User user1 = new User(1, "Alex", "alex@example.com", "password123", null);
-    User user2 = new User(2, "Maria", "maria@example.com", "password456", null);
-    PrivateChat privateChat = new PrivateChat(1, user1, user2);
+    try {
+      // Ініціалізація таблиць
+      new UsersTable();
+      new MessagesTable();
+      new PrivateChatsTable();
+      new NotificationsTable();
+      new PrivateChatsTable();
+      new RolesTable();
 
-    Message message1 = new Message(1, privateChat, user1, List.of(MessageType.TEXT), "Привіт, як справи?", null, null, null);
-    privateChat.sendMessage(message1);
-
-    privateChat.getHistoryChat().getNotificationsForUser(user2).forEach(notification -> {
-      System.out.println("Сповіщення для Maria: " + notification.getTextContent());
-    });
-
+      System.out.println("All tables and indexes have been created.");
+    } finally {
+      // Закриття з'єднання
+      DatabaseConnection.getInstance().closeConnection();
+    }
   }
 }

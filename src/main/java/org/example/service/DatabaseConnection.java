@@ -6,9 +6,7 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
   private static final String DATABASE_URL = "jdbc:sqlite:src/main/resources/messenger_local_db.db";
-
   private static DatabaseConnection instance;
-
   private Connection connection;
 
   private DatabaseConnection() {
@@ -28,6 +26,13 @@ public class DatabaseConnection {
   }
 
   public Connection getConnection() {
+    if (connection == null) {
+      try {
+        connection = DriverManager.getConnection(DATABASE_URL);
+      } catch (SQLException e) {
+        System.out.println("Error reconnecting to SQLite: " + e.getMessage());
+      }
+    }
     return connection;
   }
 
@@ -42,3 +47,4 @@ public class DatabaseConnection {
     }
   }
 }
+
