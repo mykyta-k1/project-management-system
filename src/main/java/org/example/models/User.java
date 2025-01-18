@@ -36,6 +36,14 @@ public class User {
     setAvatarUrl(avatarUrl);
   }
 
+  public LocalDateTime getLastActive() {
+    return lastActive;
+  }
+
+  public void setLastActive(LocalDateTime lastActive) {
+    this.lastActive = lastActive;
+  }
+
   public int getId() {
     return id;
   }
@@ -122,5 +130,6 @@ public class User {
     System.out.println("Сповіщення для " + username + ": нове повідомлення від " + fromUser + ": " + content);
   }
   */
+
 
 }

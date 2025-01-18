@@ -108,6 +108,17 @@ public class PrivateChat {
     return displayName;
   }
 
+  public String getAvatarForUser(User requester) {
+    if (requester.equals(user1)) {
+      return user2.getAvatarUrl();
+    } else if (requester.equals(user2)) {
+      return user1.getAvatarUrl();
+    } else {
+      throw new IllegalArgumentException("Користувач не є учасником цього чату.");
+    }
+  }
+
+
   public int getUnreadMessagesCount(User user) {
     return unreadMessagesCount.getOrDefault(user, 0);
   }

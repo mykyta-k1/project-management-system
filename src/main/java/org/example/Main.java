@@ -13,11 +13,9 @@ public class Main {
     User user2 = new User(2, "Maria", "maria@example.com", "password456", null);
     PrivateChat privateChat = new PrivateChat(1, user1, user2);
 
-// Надсилаємо повідомлення
     Message message1 = new Message(1, privateChat, user1, List.of(MessageType.TEXT), "Привіт, як справи?", null, null, null);
     privateChat.sendMessage(message1);
 
-// Переглядаємо сповіщення для user2
     privateChat.getHistoryChat().getNotificationsForUser(user2).forEach(notification -> {
       System.out.println("Сповіщення для Maria: " + notification.getTextContent());
     });
